@@ -1,0 +1,27 @@
+.personalInfoSec {
+  background-color: #e0f7fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-bottom: 24px;
+  width: 80%;
+}
+
+.personalInfoSec__header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.personalInfoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  /* two equal columns */
+  gap: 24px 24px; /* vertical and horizontal gap */
+}
+
+/* For smaller screens, stack fields vertically */
+@media (max-width: 600px) {
+  .personalInfoGrid {
+    grid-template-columns: 1fr; /* one column */
+  }
+}

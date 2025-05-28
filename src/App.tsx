@@ -1,26 +1,35 @@
+import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
+import Login from './features/auth/login';
+import Dashboard from './features/dashboard/dashboard';
+import Navbar from './components/navbar';
+import HumanResource from './features/humanResource';
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import EmployeeDetails from './features/humanResource/invite-employees/component/employee-form';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+
+        {/* Routes that include the Navbar */}
+        <Route element={<WithNavbar />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+
+        <Route path="/hr/*" element={<HumanResource />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
+
+const WithNavbar: React.FC = () => {
+  return (
+    <>
+      <Navbar />
+      <Outlet />
+    </>
+  );
+};
