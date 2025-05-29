@@ -6,41 +6,41 @@ import { employees } from '../../../utils/mockData';
 
 
 const statusClass: Record<Employee['status'], string> = {
-  Permanent: 'is-success',
-  Probation: 'is-info',
-  Internship: 'is-danger',
+    Permanent: 'is-success',
+    Probation: 'is-info',
+    Internship: 'is-danger',
 };
 
 const AllEmployees: React.FC = () => {
-  return (
-    <section className="section">
-      <div className="container">
+    return (
+        <section className="section">
+            <div className="container">
 
-        <div className="level mb-5">
-          <div className="level-left">
-            <h1 className="title">All Employees</h1>
-          </div>
-          <div className="level-right">
-            <button className="button is-link mr-2">Add New Employee</button>
-            <button className="button is-light">Filter</button>
-          </div>
-        </div>
+                <div className="level mb-5">
+                    <div className="level-left">
+                        <h1 className="title">All Employees</h1>
+                    </div>
+                    <div className="level-right">
+                        <button className="button is-link mr-2">Add New Employee</button>
+                        <button className="button is-light">Filter</button>
+                    </div>
+                </div>
 
-        <div className="field is-grouped mb-4">
-          <p className="control has-icons-left">
-            <input className="input" type="text" placeholder="Search Employee" />
-            <span className="icon is-left">
-              <i className="fas fa-search"></i>
-            </span>
-          </p>
+                <div className="field is-grouped mb-4">
+                    <p className="control has-icons-left">
+                        <input className="input" type="text" placeholder="Search Employee" />
+                        <span className="icon is-left">
+                            <i className="fas fa-search"></i>
+                        </span>
+                    </p>
 
-          <div className="control">
-            <input className="input" type="date" />
-          </div>
-          <div className="control">
-            <input className="input" type="date" />
-          </div>
-        </div>
+                    <div className="control">
+                        <input className="input" type="date" />
+                    </div>
+                    <div className="control">
+                        <input className="input" type="date" />
+                    </div>
+                </div>
 
         <table className="table is-fullwidth is-striped is-hoverable">
           <thead>
@@ -82,9 +82,9 @@ const AllEmployees: React.FC = () => {
           </tbody>
         </table>
 
-      </div>
-    </section>
-  );
+            </div>
+        </section>
+    );
 };
 
 export default AllEmployees;
