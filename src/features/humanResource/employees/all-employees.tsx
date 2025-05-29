@@ -1,47 +1,9 @@
 import React from 'react';
 import 'bulma/css/bulma.min.css';
-import { FaEye, FaEdit, FaTrash } from 'react-icons/fa';
+import { Eye, Edit, Trash2 } from 'lucide-react';
+import { Employee } from '../../../types/employee';
+import { employees } from '../../../utils/mockData';
 
-interface Employee {
-  name: string;
-  id: string;
-  dept: string;
-  designation: string;
-  type: 'Office' | 'Remote';
-  status: 'Permanent' | 'Probation' | 'Internship';
-  avatar: string;
-}
-
-const employees: Employee[] = [
-  {
-    name: 'Darlene Robertson',
-    id: '345321231',
-    dept: 'Design',
-    designation: 'UI/UX Designer',
-    type: 'Office',
-    status: 'Permanent',
-    avatar: 'https://i.pravatar.cc/150?img=1',
-  },
-  {
-    name: 'Floyd Miles',
-    id: '987890345',
-    dept: 'Development',
-    designation: 'PHP Developer',
-    type: 'Office',
-    status: 'Probation',
-    avatar: 'https://i.pravatar.cc/150?img=2',
-  },
-  {
-    name: 'Cody Fisher',
-    id: '453367122',
-    dept: 'Sales',
-    designation: 'Sales Manager',
-    type: 'Office',
-    status: 'Internship',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-  },
-  // Add more employee objects as needed
-];
 
 const statusClass: Record<Employee['status'], string> = {
   Permanent: 'is-success',
@@ -111,9 +73,9 @@ const AllEmployees: React.FC = () => {
                   <span className={`tag ${statusClass[emp.status]}`}>{emp.status}</span>
                 </td>
                 <td className="icons">
-                  <FaEye className="mr-2 has-text-grey" />
-                  <FaEdit className="mr-2 has-text-success" />
-                  <FaTrash className="has-text-danger" />
+                  <Eye className="mr-2 has-text-grey" />
+                                    <Edit className="mr-2 has-text-success" />
+                                    <Trash2 className="has-text-danger" />
                 </td>
               </tr>
             ))}
