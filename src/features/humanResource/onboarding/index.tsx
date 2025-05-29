@@ -10,77 +10,58 @@ import {
   IconButton,
   Paper,
   InputAdornment,
-  Chip,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Grid from "@mui/material/Grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 
-// Mock data for leave requests
-const leaveRequests = [
+// Dummy candidate data
+const candidates = [
   {
-    id: "LA-0215",
+    id: "C-1001",
     name: "Darlene Robertson",
+    dob: "1995-04-12",
+    gender: "Female",
     email: "darlene@example.com",
-    type: "Sick Leave",
-    from: "2024-03-12",
-    to: "2024-03-14",
-    reason: "Going to Hospital",
-    status: "Approved",
+    jobRole: "Frontend Developer",
+    status: "In Progress",
   },
   {
-    id: "LA-0216",
+    id: "C-1002",
     name: "Floyd Miles",
+    dob: "1990-01-30",
+    gender: "Male",
     email: "floyd@example.com",
-    type: "Sick Leave",
-    from: "2024-03-12",
-    to: "2024-03-14",
-    reason: "Going to Hospital",
-    status: "Pending",
+    jobRole: "Backend Developer",
+    status: "Completed",
   },
-  {
-    id: "LA-0217",
-    name: "Cody Fisher",
-    email: "cody@example.com",
-    type: "Sick Leave",
-    from: "2024-03-12",
-    to: "2024-03-14",
-    reason: "Going to Hospital",
-    status: "Declined",
-  },
-  // Add more entries as needed
 ];
 
-const statusColor: Record<string, "success" | "warning" | "error"> = {
-  Approved: "success",
-  Pending: "warning",
-  Declined: "error",
-};
-
-const LeavePage: React.FC = () => {
+const OnboardingPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredLeaves = leaveRequests.filter((leave) =>
-    leave.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCandidates = candidates.filter((cand) =>
+    cand.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <Container maxWidth="lg" sx={{ mt: 6 }}>
       <Typography variant="h4" fontWeight="bold" gutterBottom>
-        Leave Management
+        Pre-Onboarding
       </Typography>
       <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-        Manage employee leave records
+        Candidate Profile Summary
       </Typography>
 
+      {/* Search & Filters */}
       <Card sx={{ p: 3, mb: 4 }}>
         <CardContent>
           <Grid container spacing={2} alignItems="center">
             <Grid sx={{xs:12, md:4}}>
               <TextField
                 fullWidth
-                placeholder="Search Employee"
+                placeholder="Search Candidate"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 InputProps={{
@@ -93,49 +74,47 @@ const LeavePage: React.FC = () => {
                 variant="outlined"
               />
             </Grid>
-
             <Grid sx={{xs:6, md:3}}>
-              <TextField fullWidth type="date" label="From" InputLabelProps={{ shrink: true }} />
+              <TextField fullWidth type="date" label="From DOB" InputLabelProps={{ shrink: true }} />
             </Grid>
             <Grid sx={{xs:6, md:3}}>
-              <TextField fullWidth type="date" label="To" InputLabelProps={{ shrink: true }} />
+              <TextField fullWidth type="date" label="To DOB" InputLabelProps={{ shrink: true }} />
             </Grid>
             <Grid sx={{xs:12, md:2}}>
               <Button variant="contained" fullWidth>
-                Add Leave
+                Add Profile
               </Button>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
 
+      {/* Candidate Cards */}
       <Paper sx={{ p: 2 }}>
         <Grid container spacing={2}>
-          {filteredLeaves.map((leave, index) => (
-            <Grid sx={{xs:12, md:4}} key={index}>
+          {filteredCandidates.map((cand) => (
+            <Grid sx={{xs:12, md:4}} key={cand.id}>
               <Paper elevation={3} sx={{ p: 2 }}>
-                <Typography variant="h6">{leave.name}</Typography>
+                <Typography variant="h6">{cand.name}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  ID: {leave.id}
+                  ID: {cand.id}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Email: {leave.email}
+                  Email: {cand.email}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Leave Type: {leave.type}
+                  DOB: {cand.dob}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  From: {leave.from}
+                  Gender: {cand.gender}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  To: {leave.to}
+                <Typography variant="body1" sx={{ mt: 1 }}>
+                  Role: {cand.jobRole}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Reason: {leave.reason}
+                <Typography variant="body2" sx={{ mt: 0.5 }} color="text.secondary">
+                  Status: {cand.status}
                 </Typography>
-                <Box mt={1}>
-                  <Chip label={leave.status} color={statusColor[leave.status]} size="small" />
-                </Box>
+
                 <Box mt={2} display="flex" justifyContent="space-between">
                   <Button size="small" variant="outlined">
                     View Details
@@ -158,4 +137,4 @@ const LeavePage: React.FC = () => {
   );
 };
 
-export default LeavePage;
+export default OnboardingPage;

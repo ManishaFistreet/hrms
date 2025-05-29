@@ -1,4 +1,4 @@
-export interface Employee {
+export interface EmployeeSelf {
   id: string;
   name: string;
   checkInTime?: string;

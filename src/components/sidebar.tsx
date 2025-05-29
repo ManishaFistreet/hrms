@@ -17,6 +17,8 @@ const Sidebar: FC = () => {
         <Link to="/hr/employees" className={isActive("/hr/employees")}>Employees</Link>
         <Link to="/hr/attendance" className={isActive("/hr/attendance")}>Attendance</Link>
         <Link to="/hr/leaves" className={isActive("/hr/leaves")}>Leaves</Link>
+        <Link to="/hr/payroll" className={isActive("/hr/payroll")}>Payroll</Link>
+        <Link to="/hr/onboarding" className={isActive("/hr/onboarding")}>Onboarding Form</Link>
       </nav>
     </div>
   );
