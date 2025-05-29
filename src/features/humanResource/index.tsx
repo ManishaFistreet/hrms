@@ -10,6 +10,7 @@ import AllEmployees from "./employees/all-employees";
 import AttendanceForm from "./attendance/attendance-form";
 import PayrollPage from "./payroll/payroll-form";
 import LeaveForm from "./leaves/leave-form";
+import OnboardingForm from "./onboarding/onboarding-form";
 
 // Type-safe functional component
 const HumanResource: React.FC = () => {
@@ -28,6 +29,7 @@ const HumanResource: React.FC = () => {
           <Route path="attendance" element={<AttendanceForm />} />
           <Route path="payroll" element={<PayrollPage />} />
           <Route path="leaves" element={<LeaveForm />} />
+          <Route path="onboarding" element={<OnboardingForm />} />
           <Route path="leaves" element={<Leaves />} />
           <Route path="*" element={<Navigate to="/hr" replace />} />
           {/* </Routes><Route path="payroll" element={</>} /> */}
