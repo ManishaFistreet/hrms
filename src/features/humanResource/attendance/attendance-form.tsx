@@ -1,26 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-  Box,
   Card,
-  Typography,
-  TextField,
-  IconButton,
+  Table,
+  Input,
+  DatePicker,
   Button,
   Avatar,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  InputAdornment,
-} from '@mui/material';
-import { Search, Delete, Edit } from '@mui/icons-material';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+  Typography,
+  Space,
+  Row,
+  Col,
+} from 'antd';
+import { SearchOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import dayjs, { Dayjs } from 'dayjs';
 
-
+const { RangePicker } = DatePicker;
 
 const employeeData = [
   {
@@ -41,102 +35,105 @@ const employeeData = [
 ];
 
 const AttendanceForm: React.FC = () => {
-  const [fromDate, setFromDate] = React.useState<Dayjs | null>(dayjs());
-  const [toDate, setToDate] = React.useState<Dayjs | null>(dayjs()); 
-  const [search, setSearch] = React.useState('');
+  const [fromDate, setFromDate] = useState<Dayjs | null>(dayjs());
+  const [toDate, setToDate] = useState<Dayjs | null>(dayjs());
+  const [search, setSearch] = useState('');
 
   const filteredEmployees = employeeData.filter((emp) =>
     emp.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const columns = [
+    {
+      title: 'Employee',
+      dataIndex: 'name',
+      key: 'name',
+      render: (_: any, record: any) => (
+        <Space>
+          <Avatar src={record.avatar} />
+          <Typography.Text>{record.name}</Typography.Text>
+        </Space>
+      ),
+    },
+    {
+      title: 'Employee ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Typography.Text style={{ color: status === 'Present' ? 'green' : 'red', fontWeight: 500 }}>
+          {status}
+        </Typography.Text>
+      ),
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: () => (
+        <Space>
+          <Button icon={<EditOutlined />} type="link" />
+          <Button icon={<DeleteOutlined />} type="link" danger />
+        </Space>
+      ),
+    },
+  ];
+
   return (
-    <Box p={3}>
-      <Typography variant="h5" fontWeight="bold" mb={1}>
-        Attendance
-      </Typography>
-      <Typography variant="subtitle1" color="text.secondary" mb={3}>
+    <div style={{ padding: 24 }}>
+      <Typography.Title level={5}>Attendance</Typography.Title>
+      <Typography.Text type="secondary" style={{ marginBottom: 24, display: 'inline-block' }}>
         Employee Attendance Records
-      </Typography>
+      </Typography.Text>
 
-      <Card sx={{ p: 2 }}>
-        <Box display="flex" gap={2} flexWrap="wrap" mb={2} alignItems="center">
-          <TextField
-            placeholder="Search Employee"
-            variant="outlined"
-            size="small"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Search />
-                </InputAdornment>
-              ),
-            }}
-            sx={{ minWidth: 250 }}
-          />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <Card style={{ marginTop: 16 }}>
+        <Row gutter={[16, 16]} align="middle" wrap>
+          <Col xs={24} sm={12} md={6}>
+            <Input
+              placeholder="Search Employee"
+              prefix={<SearchOutlined />}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Col>
+          <Col xs={12} sm={6} md={4}>
             <DatePicker
-              label="From"
+              style={{ width: '100%' }}
               value={fromDate}
-              onChange={(newValue) => setFromDate(newValue)}
-              slotProps={{ textField: { size: 'small' } }}
+              onChange={(date) => setFromDate(date)}
+              placeholder="From"
             />
+          </Col>
+          <Col xs={12} sm={6} md={4}>
             <DatePicker
-              label="To"
+              style={{ width: '100%' }}
               value={toDate}
-              onChange={(newValue) => setToDate(newValue)}
-              slotProps={{ textField: { size: 'small' } }}
+              onChange={(date) => setToDate(date)}
+              placeholder="To"
             />
-          </LocalizationProvider>
-          <Button variant="contained" sx={{ ml: 'auto' }}>
-            Add Attendance
-          </Button>
-        </Box>
+          </Col>
+          <Col xs={24} sm={6} md={4} style={{ marginLeft: 'auto', textAlign: 'right' }}>
+            <Button type="primary">Add Attendance</Button>
+          </Col>
+        </Row>
 
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Employee</TableCell>
-              <TableCell>Employee ID</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredEmployees.map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell>
-                  <Box display="flex" alignItems="center" gap={1}>
-                    <Avatar src={emp.avatar} />
-                    <Typography>{emp.name}</Typography>
-                  </Box>
-                </TableCell>
-                <TableCell>{emp.id}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>
-                  <Typography
-                    color={emp.status === 'Present' ? 'green' : 'red'}
-                    fontWeight="medium"
-                  >
-                    {emp.status}
-                  </Typography>
-                </TableCell>
-                <TableCell>
-                  <IconButton color="primary">
-                    <Edit />
-                  </IconButton>
-                  <IconButton color="error">
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <Table
+          style={{ marginTop: 24 }}
+          dataSource={filteredEmployees}
+          columns={columns}
+          rowKey="id"
+          pagination={false}
+        />
       </Card>
-    </Box>
+    </div>
   );
 };
 

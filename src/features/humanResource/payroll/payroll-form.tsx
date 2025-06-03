@@ -1,70 +1,115 @@
 import React from "react";
 import {
-  Box, Typography, TextField, Button, Table, TableBody,
-  TableCell, TableContainer, TableHead, TableRow, Paper,
-  IconButton
-} from "@mui/material";
-import { Delete, Edit } from "@mui/icons-material";
+  Table,
+  Input,
+  Button,
+  DatePicker,
+  Space,
+  Typography,
+  Card,
+  Tag,
+  Popconfirm,
+} from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FileTextOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 
+const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
 
 const employees = [
   {
+    key: "1",
     name: "Darlene Robertson",
     id: "345321231",
     email: "bernard@example.com",
     designation: "UI/UX Designer",
     salary: 38400,
   },
-  // Add more dummy data heres
+  // Add more data as needed
 ];
 
 const PayrollPage: React.FC = () => {
+  const columns = [
+    {
+      title: "Employee Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string) => <Text strong>{text}</Text>,
+    },
+    {
+      title: "Employee ID",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      key: "email",
+    },
+    {
+      title: "Designation",
+      dataIndex: "designation",
+      key: "designation",
+      render: (text: string) => <Tag color="blue">{text}</Tag>,
+    },
+    {
+      title: "Salary",
+      dataIndex: "salary",
+      key: "salary",
+      render: (salary: number) => `₹${salary.toLocaleString()}`,
+    },
+    {
+      title: "Payslip",
+      key: "payslip",
+      render: () => (
+        <Button type="default" icon={<FileTextOutlined />} size="small">
+          Generate
+        </Button>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: () => (
+        <Space size="middle">
+          <Button icon={<EditOutlined />} type="link">
+            Edit
+          </Button>
+          <Popconfirm title="Are you sure to delete?">
+            <Button icon={<DeleteOutlined />} type="link" danger />
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
   return (
-    <Box sx={{ p: 4 }}>
-      <Typography variant="h4" gutterBottom>Payroll</Typography>
-      <Typography variant="subtitle1" gutterBottom>Employee Salary</Typography>
+    <Card style={{ margin: 24, borderRadius: 12 }}>
+      <Title level={3}>Payroll</Title>
+      <Text type="secondary">Employee Salary</Text>
 
-      {/* Toolbar */}
-      <Box sx={{ display: "flex", gap: 2, mb: 3 }}>
-        <TextField label="Search Employee" variant="outlined" />
-        <TextField type="date" label="From" InputLabelProps={{ shrink: true }} />
-        <TextField type="date" label="To" InputLabelProps={{ shrink: true }} />
-        <Button variant="contained">Add Salary</Button>
-      </Box>
+      {/* Filter Toolbar */}
+      <Space style={{ marginTop: 24, marginBottom: 24, marginLeft: 20 }} wrap>
+        <Input placeholder="Search Employee" style={{ width: 200 }} />
+        <RangePicker />
+        <Button type="primary" icon={<PlusOutlined />}>
+          Add Salary
+        </Button>
+      </Space>
 
-      {/* Table */}
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Employee Name</TableCell>
-              <TableCell>Employee ID</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Designation</TableCell>
-              <TableCell>Salary</TableCell>
-              <TableCell>Payslip</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {employees.map((emp) => (
-              <TableRow key={emp.id}>
-                <TableCell>{emp.name}</TableCell>
-                <TableCell>{emp.id}</TableCell>
-                <TableCell>{emp.email}</TableCell>
-                <TableCell>{emp.designation}</TableCell>
-                <TableCell>{emp.salary}</TableCell>
-                <TableCell><Button variant="outlined" size="small">Generate Slip</Button></TableCell>
-                <TableCell>
-                  <IconButton color="primary"><Edit /></IconButton>
-                  <IconButton color="error"><Delete /></IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+      {/* Salary Table */}
+      <Table
+        columns={columns}
+        dataSource={employees}
+        pagination={{ pageSize: 5 }}
+        bordered
+        rowKey="id"
+      />
+    </Card>
   );
 };
 

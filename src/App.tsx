@@ -4,7 +4,6 @@ import Dashboard from './features/dashboard/dashboard';
 import Navbar from './components/navbar';
 import HumanResource from './features/humanResource';
 import React from 'react';
-import EmployeeDetails from './features/humanResource/invite-employees/component/employee-form';
 
 const App: React.FC = () => {
   return (

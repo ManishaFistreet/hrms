@@ -1,222 +1,155 @@
-import React from "react";
-import { useForm, SubmitHandler, useWatch } from "react-hook-form";
+import React, { useState } from "react";
+import { Form, Input, Select, DatePicker, Typography, Row, Col, Button, message } from "antd";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-type FormValues = {
-  firstname: string;
-  lastname: string;
-  dob: string;
-  gender: string;
-  degree: string;
-  specialization: string;
-  university: string;
-  yearofpassing: number;
-  religion: string;
-  caste: string;
-  languagespoken: string;
-  martialstatus: string;
-  annual_income: string;
-  source: string;
-  resumeflag: string;
-  offerletterflag: string;
-  skills: string;
-  bankname: string;
-  ifsc: string;
-  bankholdername: string;
-  bankacnumber: string;
-  resumeFile?: FileList;
-  offerLetterFile?: FileList;
-};
+const { Option } = Select;
+const { Title } = Typography;
 
-const EmployeeDetails: React.FC = () => {
-    const {
-    register,
-    handleSubmit,
-    control
-  } = useForm<FormValues>();
+const EmployeeForm: React.FC = ({ onSuccess }: { onSuccess?: () => void }) => {
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm();
+    const navigate = useNavigate();
 
-  const resumeflag = useWatch({ control, name: "resumeflag" });
-  const offerletterflag = useWatch({ control, name: "offerletterflag" });
+  const handleSubmit = async (values: any) => {
+    setLoading(true);
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => {
-    const formData = new FormData();
-    formData.append("resumeFile", data.resumeFile?.[0] || "");
-    formData.append("offerLetterFile", data.offerLetterFile?.[0] || "");
-    console.log("Form data --", data);
+    try {
+      const response = await axios.post(
+        'http://18.60.181.218:8180/app-melbac-zp0/apiv1/employee/saveorupdate/createemployee',
+        values
+      );
+
+      if (response.status === 200) {
+        message.success('Employee added successfully!');
+        form.resetFields();
+        onSuccess?.(); // Close modal or refresh list if needed
+      } else {
+        message.error('Something went wrong!');
+      }
+    } catch (error) {
+      console.error(error);
+      message.error('Failed to add employee');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="container mt-6">
-      {/* Personal Information */}
-      <div className="box">
-        <h2 className="title is-4 has-text-primary">Personal Information</h2>
-        <div className="columns is-multiline">
-          <div className="column is-half">
-            <label className="label">First Name</label>
-            <input className="input" {...register("firstname")} placeholder="Enter First Name" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Last Name</label>
-            <input className="input" {...register("lastname")} placeholder="Enter Last Name" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Date of Birth</label>
-            <input type="date" className="input" {...register("dob")} />
-          </div>
-          <div className="column is-half">
-            <label className="label">Gender</label>
-            <div className="select is-fullwidth">
-              <select {...register("gender")}>
-                <option value="">Select Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+    <Form layout="vertical" form={form}
+      onFinish={handleSubmit} name="employee_entry_form" autoComplete="off">
+      <Button onClick={() => navigate('/hr')} style={{ marginBottom: 16 }}>
+        ← Back to Dashboard
+      </Button>
+      <Title level={3}>Personal Info</Title>
 
-      {/* Academic Information */}
-      <div className="box">
-        <h2 className="title is-5">Academic Information</h2>
-        <div className="columns is-multiline">
-          <div className="column is-half">
-            <label className="label">Degree</label>
-            <input className="input" {...register("degree")} placeholder="Enter Degree" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Specialization</label>
-            <input className="input" {...register("specialization")} placeholder="Enter Specialization" />
-          </div>
-          <div className="column is-half">
-            <label className="label">University</label>
-            <input className="input" {...register("university")} placeholder="Enter University Name" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Year of Passing</label>
-            <input type="number" className="input" {...register("yearofpassing")} placeholder="Enter Year" />
-          </div>
-        </div>
-      </div>
+      <Form.Item label="Employee ID" name="employeeid" rules={[{ required: true }]}>
+        <Input placeholder="Enter Employee ID" />
+      </Form.Item>
 
-      {/* Other Information */}
-      <div className="box">
-        <h2 className="title is-5">Other Information</h2>
-        <div className="columns is-multiline">
-          <div className="column is-half">
-            <label className="label">Religion</label>
-            <input className="input" {...register("religion")} placeholder="Enter Religion" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Caste</label>
-            <input className="input" {...register("caste")} placeholder="Enter Caste" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Language</label>
-            <input className="input" {...register("languagespoken")} placeholder="Enter Language" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Marital Status</label>
-            <div className="select is-fullwidth">
-              <select {...register("martialstatus")}>
-                <option value="">Select</option>
-                <option>Single</option>
-                <option>Married</option>
-                <option>Divorced</option>
-                <option>Widowed</option>
-              </select>
-            </div>
-          </div>
-          <div className="column is-half">
-            <label className="label">Annual Income</label>
-            <input className="input" {...register("annual_income")} placeholder="Enter Annual Income" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Source</label>
-            <input className="input" {...register("source")} placeholder="Enter Source" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Resume / CV</label>
-            <div className="select is-fullwidth mb-2">
-              <select {...register("resumeflag")}>
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-            {resumeflag === "Yes" && (
-              <div>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  {...register("resumeFile")}
-                  className="input"
-                />
-              </div>
-            )}
-          </div>
+      <Form.Item label="Record ID" name="id" rules={[{ required: true }]}>
+        <Input placeholder="Enter Record ID" />
+      </Form.Item>
 
-          <div className="column is-half">
-            <label className="label">Offer Letter</label>
-            <div className="select is-fullwidth mb-2">
-              <select {...register("offerletterflag")}>
-                <option value="">Select</option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </div>
-            {offerletterflag === "Yes" && (
-              <div>
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  {...register("offerLetterFile")}
-                  className="input"
-                />
-              </div>
-            )}
-          </div>
+      <Form.Item label="Full Name" name="employeename" rules={[{ required: true }]}>
+        <Input placeholder="Enter Full Name" />
+      </Form.Item>
 
-          <div className="column is-full">
-            <label className="label">Skills & Certifications</label>
-            <textarea className="textarea" {...register("skills")} placeholder="Enter Skills & Certifications" />
-          </div>
-        </div>
-      </div>
+      <Form.Item label="Employment Type" name="employmenttype" rules={[{ required: true }]}>
+        <Select placeholder="Choose Employment Type">
+          <Option value="Full-Time Employment">Full-Time Employment</Option>
+          <Option value="Part-Time Employment">Part-Time Employment</Option>
+          <Option value="Temporary Employment">Temporary Employment</Option>
+          <Option value="Contract Employment">Contract Employment</Option>
+          <Option value="Internship/Apprenticeship Employment">Internship/Apprenticeship</Option>
+          <Option value="Seasonal Employment">Seasonal Employment</Option>
+          <Option value="Casual Employment">Casual Employment</Option>
+          <Option value="Self-Employment">Self-Employment</Option>
+          <Option value="Gig Work">Gig Work</Option>
+          <Option value="Remote Employment">Remote Employment</Option>
+        </Select>
+      </Form.Item>
 
-      {/* Bank Account Details */}
-      <div className="box">
-        <h2 className="title is-5">Bank Account Details</h2>
-        <div className="columns is-multiline">
-          <div className="column is-half">
-            <label className="label">Bank Name</label>
-            <input className="input" {...register("bankname")} placeholder="Enter Bank Name" />
-          </div>
-          <div className="column is-half">
-            <label className="label">IFSC Code</label>
-            <input className="input" {...register("ifsc")} placeholder="Enter IFSC Code" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Account Holder Name</label>
-            <input className="input" {...register("bankholdername")} placeholder="Enter Account Holder Name" />
-          </div>
-          <div className="column is-half">
-            <label className="label">Account Number</label>
-            <input className="input" {...register("bankacnumber")} placeholder="Enter Account Number" />
-          </div>
-        </div>
-      </div>
+      <Form.Item label="Employment Type Code" name="employmenttypecode">
+        <Input readOnly />
+      </Form.Item>
 
-      {/* Submit Button */}
-      <div className="field mt-5">
-        <div className="control">
-          <button type="submit" className="button is-primary">
-            Submit
-          </button>
-        </div>
-      </div>
-    </form>
+      <Form.Item label="Phone Number" name="phonenumber" rules={[{ required: true }]}>
+        <Input placeholder="Enter Phone Number" />
+      </Form.Item>
+
+      <Form.Item label="Date of Birth" name="dob" rules={[{ required: true }]}>
+        <DatePicker style={{ width: "100%" }} />
+      </Form.Item>
+
+      <Form.Item label="Gender" name="gender" rules={[{ required: true }]}>
+        <Select placeholder="Choose Gender">
+          <Option value="Male">Male</Option>
+          <Option value="Female">Female</Option>
+          <Option value="Other">Other</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item label="Email" name="personalemail">
+        <Input type="email" />
+      </Form.Item>
+
+      <Form.Item label="Father Name" name="fathername" rules={[{ required: true }]}>
+        <Input placeholder="Enter Father Name" />
+      </Form.Item>
+
+      <Form.Item label="Mother Name" name="mothername" rules={[{ required: true }]}>
+        <Input placeholder="Enter Mother Name" />
+      </Form.Item>
+
+      <Form.Item label="Spouse Name" name="spousename" rules={[{ required: true }]}>
+        <Input placeholder="Enter Spouse Name" />
+      </Form.Item>
+
+      <Form.Item label="Nationality" name="nationality" rules={[{ required: true }]}>
+        <Input placeholder="Enter Nationality" />
+      </Form.Item>
+
+      <Form.Item label="Current Address" name="currentaddress" rules={[{ required: true }]}>
+        <Input.TextArea rows={2} placeholder="Enter Current Address" />
+      </Form.Item>
+
+      <Form.Item label="Permanent Address" name="permanentaddress" rules={[{ required: true }]}>
+        <Input.TextArea rows={2} placeholder="Enter Permanent Address" />
+      </Form.Item>
+
+      <Title level={3}>Proof of Identity</Title>
+      {/* Additional Proof of Identity fields go here */}
+
+      <Title level={3}>Emergency Contact</Title>
+      <Form.Item label="Emergency Name" name="emergencyname" rules={[{ required: true }]}>
+        <Input placeholder="Enter Emergency Contact Name" />
+      </Form.Item>
+
+      <Form.Item label="Relation" name="emergency_relation">
+        <Input placeholder="Enter Relation" />
+      </Form.Item>
+
+      <Form.Item label="Emergency Contact" name="emergencycontact" rules={[{ required: true }]}>
+        <Input placeholder="Enter Emergency Contact" />
+      </Form.Item>
+
+      <Title level={3}>Other Information</Title>
+      <Form.Item label="Religion" name="religion" rules={[{ required: true }]}>
+        <Input placeholder="Enter Religion" />
+      </Form.Item>
+
+      <Form.Item label="Caste" name="caste">
+        <Input placeholder="Enter Caste" />
+      </Form.Item>
+
+      <Form.Item>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
   );
 };
 
-export default EmployeeDetails;
+export default EmployeeForm;

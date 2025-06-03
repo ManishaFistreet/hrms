@@ -1,90 +1,135 @@
-import React from 'react';
-import 'bulma/css/bulma.min.css';
-import { Eye, Edit, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  Table,
+  Button,
+  Input,
+  Space,
+  DatePicker,
+  Tag,
+  Avatar,
+  Row,
+  Col,
+  Typography,
+  Card,
+} from 'antd';
+import {
+  EyeOutlined,
+  EditOutlined,
+  DeleteOutlined,
+} from '@ant-design/icons';
+
+import { SearchOutlined } from '@ant-design/icons';
+import type { ColumnsType } from 'antd/es/table';
 import { Employee } from '../../../types/employee';
 import { employees } from '../../../utils/mockData';
 
+const { Title } = Typography;
+const { RangePicker } = DatePicker;
 
-const statusClass: Record<Employee['status'], string> = {
-    Permanent: 'is-success',
-    Probation: 'is-info',
-    Internship: 'is-danger',
+const statusColor: Record<Employee['status'], string> = {
+  Permanent: 'green',
+  Probation: 'blue',
+  Internship: 'red',
 };
 
 const AllEmployees: React.FC = () => {
-    return (
-        <section className="section">
-            <div className="container">
+  const [search, setSearch] = useState('');
 
-                <div className="level mb-5">
-                    <div className="level-left">
-                        <h1 className="title">All Employees</h1>
-                    </div>
-                    <div className="level-right">
-                        <button className="button is-link mr-2">Add New Employee</button>
-                        <button className="button is-light">Filter</button>
-                    </div>
-                </div>
+  const filteredEmployees = employees.filter((emp) =>
+    emp.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-                <div className="field is-grouped mb-4">
-                    <p className="control has-icons-left">
-                        <input className="input" type="text" placeholder="Search Employee" />
-                        <span className="icon is-left">
-                            <i className="fas fa-search"></i>
-                        </span>
-                    </p>
+  const columns: ColumnsType<Employee> = [
+    {
+      title: 'Employee Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (text, record) => (
+        <Space>
+          <Avatar src={record.avatar} />
+          {record.name}
+        </Space>
+      ),
+    },
+    {
+      title: 'Employee ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: 'Department',
+      dataIndex: 'dept',
+      key: 'dept',
+    },
+    {
+      title: 'Designation',
+      dataIndex: 'designation',
+      key: 'designation',
+    },
+    {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: Employee['status']) => (
+        <Tag color={statusColor[status]}>{status}</Tag>
+      ),
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: () => (
+        <Space>
+          <EyeOutlined style={{ color: '#595959' }} />
+          <EditOutlined style={{ color: '#52c41a' }} />
+          <DeleteOutlined style={{ color: '#ff4d4f' }} />
+        </Space>
 
-                    <div className="control">
-                        <input className="input" type="date" />
-                    </div>
-                    <div className="control">
-                        <input className="input" type="date" />
-                    </div>
-                </div>
+      ),
+    },
+  ];
 
-        <table className="table is-fullwidth is-striped is-hoverable">
-          <thead>
-            <tr>
-              <th>Employee Name</th>
-              <th>Employee ID</th>
-              <th>Department</th>
-              <th>Designation</th>
-              <th>Type</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((emp, index) => (
-              <tr key={index}>
-                <td>
-                  <div className="is-flex is-align-items-center">
-                    <figure className="image is-32x32 mr-2">
-                      <img className="is-rounded" src={emp.avatar} alt={`${emp.name} avatar`} />
-                    </figure>
-                    {emp.name}
-                  </div>
-                </td>
-                <td>{emp.id}</td>
-                <td>{emp.dept}</td>
-                <td>{emp.designation}</td>
-                <td>{emp.type}</td>
-                <td>
-                  <span className={`tag ${statusClass[emp.status]}`}>{emp.status}</span>
-                </td>
-                <td className="icons">
-                  <Eye className="mr-2 has-text-grey" />
-                                    <Edit className="mr-2 has-text-success" />
-                                    <Trash2 className="has-text-danger" />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  return (
+    <div style={{ padding: 24 }}>
+      <Row justify="space-between" align="middle" style={{ marginBottom: 24 }}>
+        <Col>
+          <Title level={3}>All Employees</Title>
+        </Col>
+        <Col>
+          <Space>
+            <Button type="primary">Add New Employee</Button>
+            <Button>Filter</Button>
+          </Space>
+        </Col>
+      </Row>
+      <Card style={{ marginTop: 16 }}>
+        <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
+          <Col xs={24} sm={12} md={8}>
+            <Input
+              placeholder="Search Employee"
+              prefix={<SearchOutlined />}
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={8}>
+            <RangePicker style={{ width: '100%' }} />
+          </Col>
+        </Row>
 
-            </div>
-        </section>
-    );
+        <Table
+          rowKey="id"
+          dataSource={filteredEmployees}
+          columns={columns}
+          pagination={{ pageSize: 5 }}
+        />
+      </Card>
+    </div>
+  );
 };
 
 export default AllEmployees;
